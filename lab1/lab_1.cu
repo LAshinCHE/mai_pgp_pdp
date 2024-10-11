@@ -9,6 +9,11 @@ __global__ void kernel(double *arr1, double *arr2, int n){
     }
 }
 
+#define BENCHMARK
+
+const int BLOCKS = 32;
+const int THREADS = 32;
+
 void readVector(double* arr, int n){
     for (int i = 0; i < n; i++) {
         scanf("%lf", &arr[i]);
@@ -38,13 +43,33 @@ int main(){
     cudaMemcpy(dev_arr1, arr1, sizeof(double) * n, cudaMemcpyHostToDevice);
     cudaMemcpy(dev_arr2, arr2, sizeof(double) * n, cudaMemcpyHostToDevice);
 
-    kernel<<<1024, 1024>>>(dev_arr1, dev_arr2, n);
+    #ifdef BENCHMARK
+    cudaEvent_t start, stop;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+    cudaEventRecord(start);
+    #endif /* BENCHMARK */
+
+
+    kernel<<<BLOCKS, THREADS>>>(dev_arr1, dev_arr2, n);
 
     cudaDeviceSynchronize();
 
-    cudaMemcpy(arr1, dev_arr1, sizeof(double) * n, cudaMemcpyDeviceToHost);
+    #ifdef BENCHMARK
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
+    float time;
+    cudaEventElapsedTime(&time, start, stop);
+    cudaEventDestroy(start);
+    cudaEventDestroy(stop);
+    printf("time = %f ms\n", time);
+    #endif /* BENCHMARK */
 
+
+    cudaMemcpy(arr1, dev_arr1, sizeof(double) * n, cudaMemcpyDeviceToHost);
+    #ifndef BENCHMARK
     printVector(arr1,n);
+    #endif
 
     free(arr1);
     free(arr2);
