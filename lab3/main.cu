@@ -135,7 +135,7 @@ int main() {
     CSC(cudaMalloc(&arr, sizeof(uchar4) * w*h));
     CSC(cudaMemcpy(arr, data, sizeof(uchar4) * w*h, cudaMemcpyHostToDevice));
     CSC(cudaMemcpyToSymbol(avg_dev, avg.data(), sizeof(pixelcolor) * numberOfClasses, 0, cudaMemcpyHostToDevice));
-    CSC(cudaMemcpyToSymbol(norm_dev, norm.data(), sizeof(pixelcolor) * numberOfClasses, 0, cudaMemcpyHostToDevice));
+    CSC(cudaMemcpyToSymbol(norm_dev, norm.data(), sizeof(float) * numberOfClasses, 0, cudaMemcpyHostToDevice));
 
     kernel<<<NUM_BLOCKS, NUM_THREAD>>>(arr, w, h, numberOfClasses);
     CSC(cudaPeekAtLastError());
