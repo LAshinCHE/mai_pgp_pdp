@@ -123,14 +123,6 @@ int main() {
 
     vector<pixelcolor> avg = countAvg(classes, data, w);
     vector<float> norm = countNorm(avg);
-    // for(int i = 0;  i  < norm.size(); i++){
-    //     cout << norm[i].red << " " << norm[i].green << " " << norm[i].blue << '\n';
-    // }
-
-    // for(int i = 0;  i  < avg.size(); i++){
-    //     cout << avg[i].red << " " << avg[i].green << " " << avg[i].blue << '\n';
-    // }
-
     uchar4* arr;
     CSC(cudaMalloc(&arr, sizeof(uchar4) * w*h));
     CSC(cudaMemcpy(arr, data, sizeof(uchar4) * w*h, cudaMemcpyHostToDevice));

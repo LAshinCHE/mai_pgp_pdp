@@ -123,8 +123,8 @@ int main() {
     dim3 X(ZEROING_FUNC_BLOCKS_X, ZEROING_FUNC_THREADS_X);
     dim3 Y(ZEROING_FUNC_BLOCKS_Y, ZEROING_FUNC_THREADS_Y);
     for (i = 0; i < n; i++) {
-        const thrust::device_ptr<double> ptr = thrust::device_pointer_cast(dev_src + i * n);
-        const thrust::device_ptr<double> maxPtr = thrust::max_element(ptr + i, ptr + n, comp);
+            const thrust::device_ptr<double> ptr = thrust::device_pointer_cast(dev_src + i * n);
+            const thrust::device_ptr<double> maxPtr = thrust::max_element(ptr + i, ptr + n, comp);
         int maxIndex = maxPtr - ptr;
 
         if (maxIndex != i) {
